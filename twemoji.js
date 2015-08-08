@@ -1,3 +1,4 @@
+Wordlist = new Mongo.Collection("wordlist");
 if (Meteor.isServer) {
 
   Meteor.startup(function() {
