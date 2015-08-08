@@ -1,0 +1,13 @@
+{
+
+    "twitter_consumer_key": "zeaZA6so3lQJWBuvwYenj8GeF",
+    "twitter_consumer_secret": "kN75GOBU4xSYIq3cVEZ2ufa4a6qjoCEXdIUMx98cIflI4K1no8",
+    "twitter_access_token_key": "354446069-j4lVa3LvsLUfsdtRCJjiDOPazXBCC9BsxVUGXleb",
+    "twitter_access_token_secret": "sgTsXbbDsKY9TnMCPpCitZDgKkSjGIOVsmEgb0t66u0qL",
+
+    "msTranslator": {
+    "id": "meteor-hackathon-twemoji",
+    "secret": "xDOM/ebtQMjFGd5qOe+cAFKMfwffwelW1psWgpLZMPg="
+  }
+
+}
