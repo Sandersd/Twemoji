@@ -25,15 +25,18 @@ stream.on('tweet', Meteor.bindEnvironment (function (tweet) {
   if(tweet['lang'] === 'en') {
     if(tweet['place'] !== null) {
 
-      console.log(tweet['id'] + ', ' + tweet['place']['bounding_box']['coordinates'][0][0]);
+      console.log(tweet['id'] + ', ' + tweet['place']['bounding_box']['coordinates'][0][0]+ ', ' + tweet['text']);
 
 
       var id = tweet['id'];
       var coords = tweet['place']['bounding_box']['coordinates'][0][0];
+      var enText = tweet['text'];
+      var sentiVal = sentiment(enText);
       Tweets.insert({
         id: id,
         coordinates: coords,
-        en_text: ''
+        en_text: enText,
+        senti: sentiVal
       });
     }
   } else {
@@ -45,10 +48,12 @@ stream.on('tweet', Meteor.bindEnvironment (function (tweet) {
       var id = tweet['id'];
       var coords = tweet['place']['bounding_box']['coordinates'][0][0];
       var enText = Microsoft.translate(tweet['text'], "en");
+      var sentiVal = sentiment(enText);
       Tweets.insert({
         id: id,
         coordinates: coords,
-        en_text: enText
+        en_text: enText,
+        senti: sentiVal
       });
     }
   }
