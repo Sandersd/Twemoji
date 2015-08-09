@@ -20,9 +20,9 @@ mrt:topojson
 d3
 vsivsi:queue-async
 skeleton:skeleton
-<<<<<<< HEAD
 accounts-twitter
 accounts-ui
+<<<<<<< HEAD
 <<<<<<< HEAD
 twitter
 =======
@@ -30,3 +30,6 @@ twitter
 aldeed:geocoder
 >>>>>>> master
 >>>>>>> 447e25ce4ce92142a0adf25e26751b9fdf61300b
+=======
+aldeed:geocoder
+>>>>>>> master
