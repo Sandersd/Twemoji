@@ -3,7 +3,7 @@
 </head>
 
 <body>
-	{{> loginButtons}}
+
 	<div>
   		{{> vis}}
 	</div>
@@ -17,12 +17,26 @@
   				<h1></h1>
 			</div>
 			<div id="col2" class="four columns"><br>
-        <input type="text" id="search" ><br>
+        {{#if currentUser}}
+        <input type="text" id="search" >
+        &nbsp;<input type="radio" name="emojiRadio" value="all">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="emojiRadio" value="positive">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="emojiRadio" value="negative">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="emojiRadio" value="neutral"><br>
+        ALL
+        &nbsp;{{#emojione}}:smile:{{/emojione}}
+        &nbsp;{{#emojione}}:angry:{{/emojione}}
+        &nbsp;{{#emojione}}:expressionless:{{/emojione}}
+        <br><br>
         <button>Search</button>
 				{{#each tweets}}
 					{{> tweet}}
 				{{/each}}
-			</div>
+
+      {{else}}
+        {{> loginButtons}}
+      {{/if}}
+      </div>
   		</div>
 	</div>
 </template>

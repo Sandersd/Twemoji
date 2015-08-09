@@ -66,7 +66,7 @@ if (Meteor.isServer) {
               console.log(tweet['statuses'][i]['id'] + ', ' + tweet['statuses'][i]['text']);
 
               var id = tweet['statuses'][i]['id'];
-              
+
               var enText = Microsoft.translate(tweet['statuses'][i]['text'], "en");
               var sentiVal = sentiment(enText);
               Tweets.insert({
@@ -100,6 +100,7 @@ if (Meteor.isClient) {
       search = document.getElementById("search").value;
       console.log(search);
       Meteor.call('grabTweets', search);
+      Session.set('emojiOption', document.querySelector('input[name="emojiRadio"]:checked').value);
     }
   });
 
