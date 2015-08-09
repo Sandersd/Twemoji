@@ -19,9 +19,12 @@ if (Meteor.isServer) {
 
       T.get('search/tweets', { q: searchWord, count: 100 }, Meteor.bindEnvironment (function(err, tweet, response) {
         if(err) console.log(err);
+        var geo = new GeoCoder({
+          geocoderProvider: 'openstreetmap'
+        });
 
         for(var i=0; i<100; i++) {
-          //console.log(tweet);
+
         if(tweet['statuses'][i]['place'] !== null) {
           if(tweet['statuses'][i]['lang'] === 'en') {
 
@@ -33,36 +36,52 @@ if (Meteor.isServer) {
           var coords = tweet['statuses'][i]['place']['bounding_box']['coordinates'][0][0];
           var enText = tweet['statuses'][i]['text'];
           var sentiVal = sentiment(enText);
-          Tweets.insert({
-            id: id,
-            coordinates: coords,
-            en_text: enText,
-            senti: sentiVal
-          });
+              Tweets.insert({
+                id: id,
+                coordinates: coords,
+                en_text: enText,
+                senti: sentiVal
+              });
 
-      } else {
+            } else {
 
-          console.log(tweet['statuses'][i]['id'] + ', ' + tweet['statuses'][i]['place']['bounding_box']['coordinates'][0][0] + ', ' + tweet['statuses'][i]['text']);
+              console.log(tweet['statuses'][i]['id'] + ', ' + tweet['statuses'][i]['place']['bounding_box']['coordinates'][0][0] + ', ' + tweet['statuses'][i]['text']);
 
 
-          var id = tweet['statuses'][i]['id'];
-          var coords = tweet['statuses'][i]['place']['bounding_box']['coordinates'][0][0];
-          var enText = Microsoft.translate(tweet['statuses'][i]['text'], "en");
-          var sentiVal = sentiment(enText);
-          Tweets.insert({
-            id: id,
-            coordinates: coords,
-            en_text: enText,
-            senti: sentiVal
-          });
+              var id = tweet['statuses'][i]['id'];
+              var coords = tweet['statuses'][i]['place']['bounding_box']['coordinates'][0][0];
+              var enText = Microsoft.translate(tweet['statuses'][i]['text'], "en");
+              var sentiVal = sentiment(enText);
+              Tweets.insert({
+                id: id,
+                coordinates: coords,
+                en_text: enText,
+                senti: sentiVal
+              });
+            }
+          } else {
+            if(tweet['statuses'][i]['user']['location'] !== null) {
+              var loc = geo.geocode(tweet['statuses'][i]['user']['location']);
+              var coords =[loc['longitude'], loc['latitude']];
+              console.log(tweet['statuses'][i]['id'] + ', ' + tweet['statuses'][i]['text']);
+
+              var id = tweet['statuses'][i]['id'];
+              
+              var enText = Microsoft.translate(tweet['statuses'][i]['text'], "en");
+              var sentiVal = sentiment(enText);
+              Tweets.insert({
+                id: id,
+                coordinates: coords,
+                en_text: enText,
+                senti: sentiVal
+              });
+            }
+
+          }
         }
-      }
+      }));
     }
-  } )
-
-);
-}
-});
+  });
 }
 
 

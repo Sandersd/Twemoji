@@ -20,3 +20,4 @@ mrt:topojson
 d3
 vsivsi:queue-async
 skeleton:skeleton
+aldeed:geocoder
