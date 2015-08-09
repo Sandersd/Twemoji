@@ -3,23 +3,22 @@
 </head>
 
 <body>
-	<!--<OAuth oauth_consumer_key="nsg1SpANut0k1XO7XDwFGpmgj" oauth_nonce="6980193f04448ce4b13f4e8f57ae1884" oauth_signature="cVrnXELMvt9Hui0BjgzDW8jSPaY%3D" oauth_signature_method="HMAC-SHA1" oauth_timestamp="1439096856" oauth_token="37535962-ipxMtNBi4rDPtIilluun5gT8ishgofTkZAITv7gq9" oauth_version="1.0">
-		{{> loginButtons}}
-	</OAuth>-->
-	<div>
-  		{{> vis}}
-	</div>
-  <iframe width="100%" height="50" scrolling="yes" frameborder="yes" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/36814969&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=false&amp;show_reposts=false&amp;visual=false"></iframe>
+  <!--<OAuth oauth_consumer_key="nsg1SpANut0k1XO7XDwFGpmgj" oauth_nonce="6980193f04448ce4b13f4e8f57ae1884" oauth_signature="cVrnXELMvt9Hui0BjgzDW8jSPaY%3D" oauth_signature_method="HMAC-SHA1" oauth_timestamp="1439096856" oauth_token="37535962-ipxMtNBi4rDPtIilluun5gT8ishgofTkZAITv7gq9" oauth_version="1.0">
+    {{> loginButtons}}
+  </OAuth>-->
+  <div>
+      {{> vis}}
+  </div>
 </body>
 
 <template name="vis">
-	<div class="container">
-		<div class="row">
-			<div id="col1" class="eight columns">
-  				<div id="map"></div>
-  				<h1></h1>
-			</div>
-			<div id="col2" class="four columns"><br>
+  <div class="container">
+    <div class="row">
+      <div id="col1" class="eight columns">
+          <div id="map"></div>
+          <h1></h1>
+      </div>
+      <div id="col2" class="four columns"><br>
         {{#if currentUser}}
         <input type="text" id="search" ><br>
         &nbsp;<input type="radio" name="emojiRadio" value="all">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -32,20 +31,23 @@
         &nbsp;{{#emojione}}:expressionless:{{/emojione}}
         <br><br>
         <button>Search</button><br>
-				{{#each tweets}}
-					{{> tweet}}
-				{{/each}}
+        <div style="height: 420px; overflow-y: auto; width: 300px">
+          {{#each tweets}}
+            {{> tweet}}
+          {{/each}}
+        </div>
 
       {{else}}
         {{> loginButtons}}
       {{/if}}
       </div>
-  		</div>
-	</div>
+      </div>
+  </div>
 </template>
 
 <template name="tweet">
 
-{{id}}
+{{en_text}}
+<br>
 <br>
 </template>
