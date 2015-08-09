@@ -18,7 +18,7 @@ if (Meteor.isServer) {
 
     //console.log(Microsoft.translate("Hello world", "nl"));
 
-    var stream = T.stream('statuses/sample');
+  var stream = T.stream('statuses/filter', { track: 'Trump' });
 
 	stream.on('tweet', Meteor.bindEnvironment (function (tweet) {
 
@@ -85,7 +85,7 @@ if (Meteor.isClient) {
 		}
 	});
 
-	
+
   Template.vis.rendered = function () {
     var margin = {top: 10, left: 10, bottom: 10, right: 10}
   				, width = parseInt(d3.select('#col1').style('width'))
@@ -156,7 +156,7 @@ if (Meteor.isClient) {
             .each("end", transition);
       })();
 
-	
+
     }
   };
 }

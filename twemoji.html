@@ -6,7 +6,7 @@
   	{{> vis}}
 </body>
 
-<template name="vis">  
+<template name="vis">
 	<div class="container">
 		<div class="row">
 			<div id="col1" class="eight columns">
@@ -14,6 +14,7 @@
   				<h1></h1>
 			</div>
 			<div id="col2" class="four columns">
+        <input type="text" id="search" >
 				{{#each tweets}}
 					{{> tweet}}
 				{{/each}}
