@@ -1,4 +1,6 @@
 Wordlist = new Mongo.Collection("wordlist");
+Tweets = new Mongo.Collection("tweets");
+
 if (Meteor.isServer) {
 
   Meteor.startup(function() {
@@ -12,22 +14,8 @@ if (Meteor.isServer) {
       access_token_secret: "sgTsXbbDsKY9TnMCPpCitZDgKkSjGIOVsmEgb0t66u0qL"
     });
 
-    /*T.get('search/tweets',
-        {
-            q: 'trending',
-            count: 50
-        },
-        function(err, data, response) {
-            for(var i=0; i<50; i++) {
-                console.log(i);
-                //if(data.statuses[i].place !== null) {
-                  console.log(data.statuses[i]);
-                //}
-            }
 
-        }
-    );*/
-    console.log(Microsoft.translate("Hello world", "nl"));
+    //console.log(Microsoft.translate("Hello world", "nl"));
 
     var stream = T.stream('statuses/sample');
 
@@ -36,7 +24,31 @@ stream.on('tweet', Meteor.bindEnvironment (function (tweet) {
   if(tweet['lang'] === 'en') {
     if(tweet['place'] !== null) {
 
-      console.log(tweet);
+      console.log(tweet['id'] + ', ' + tweet['place']['bounding_box']['coordinates'][0][0]);
+
+
+      var id = tweet['id'];
+      var coords = tweet['place']['bounding_box']['coordinates'][0][0];
+      Tweets.insert({
+        id: id,
+        coordinates: coords,
+        en_text: ''
+      });
+    }
+  } else {
+    if(tweet['place'] !== null) {
+
+      console.log(tweet['id'] + ', ' + tweet['place']['bounding_box']['coordinates'][0][0] + ', ' + tweet['text']);
+
+
+      var id = tweet['id'];
+      var coords = tweet['place']['bounding_box']['coordinates'][0][0];
+      var enText = Microsoft.translate(tweet['text'], "en");
+      Tweets.insert({
+        id: id,
+        coordinates: coords,
+        en_text: enText
+      });
     }
   }
 }));
@@ -48,5 +60,4 @@ stream.on('tweet', Meteor.bindEnvironment (function (tweet) {
 
 //invoke the server method
 if (Meteor.isClient) {
-
 }
