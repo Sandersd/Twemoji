@@ -16,3 +16,6 @@ meteorhacks:npm
 npm-container
 devian:mstranslate
 art1sec8:sentiment
+mrt:topojson
+d3
+vsivsi:queue-async
