@@ -86,7 +86,7 @@ if (Meteor.isClient) {
         .scale(248)
         .clipAngle(90);
 
-    var canvas = d3.select("body").append("canvas")
+    var canvas = d3.select("#canvas").append("canvas")
         .attr("width", width)
         .attr("height", height);
 
