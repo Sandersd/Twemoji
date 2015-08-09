@@ -17,13 +17,13 @@ if (Meteor.isServer) {
         access_token_secret: "sgTsXbbDsKY9TnMCPpCitZDgKkSjGIOVsmEgb0t66u0qL"
       });
 
-      T.get('search/tweets', { q: searchWord, count: 100 }, Meteor.bindEnvironment (function(err, tweet, response) {
+      T.get('search/tweets', { q: searchWord, count: 1000 }, Meteor.bindEnvironment (function(err, tweet, response) {
         if(err) console.log(err);
         var geo = new GeoCoder({
           geocoderProvider: 'openstreetmap'
         });
 
-        for(var i=0; i<100; i++) {
+        for(var i=0; i<1000; i++) {
 
         if(tweet['statuses'][i]['place'] !== null) {
           if(tweet['statuses'][i]['lang'] === 'en') {
@@ -40,7 +40,8 @@ if (Meteor.isServer) {
                 id: id,
                 coordinates: coords,
                 en_text: enText,
-                senti: sentiVal
+                senti: sentiVal,
+	            createdAt: new Date()
               });
 
             } else {
@@ -56,7 +57,8 @@ if (Meteor.isServer) {
                 id: id,
                 coordinates: coords,
                 en_text: enText,
-                senti: sentiVal
+                senti: sentiVal,
+                createdAt: new Date()
               });
             }
           } else {
@@ -73,7 +75,8 @@ if (Meteor.isServer) {
                 id: id,
                 coordinates: coords,
                 en_text: enText,
-                senti: sentiVal
+                senti: sentiVal,
+                created: new Date()
               });
             }
 
@@ -154,19 +157,24 @@ if (Meteor.isClient) {
       });
 
       (function transition() {
+      	var country_idx = Math.floor(Math.random() * n) + 1;
+      	while(!countries[country_idx]) {
+      		country_idx = Math.floor(Math.random() * n) + 1
+      	}
+
         d3.transition()
             .duration(1250)
             .each("start", function() {
-              title.text(countries[i = (i + 1) % n].name);
+              title.text(countries[country_idx].name);
             })
             .tween("rotate", function() {
-              var p = d3.geo.centroid(countries[i]),
+              var p = d3.geo.centroid(countries[country_idx]),
                   r = d3.interpolate(projection.rotate(), [-p[0], -p[1]]);
               return function(t) {
                 projection.rotate(r(t));
                 c.clearRect(0, 0, width, height);
                 c.fillStyle = "#fee6ce", c.beginPath(), path(land), c.fill();
-                c.fillStyle = "#e6550d", c.beginPath(), path(countries[i]), c.fill();
+                c.fillStyle = "#e6550d", c.beginPath(), path(countries[country_idx]), c.fill();
                 c.strokeStyle = "#fff", c.lineWidth = .5, c.beginPath(), path(borders), c.stroke();
                 c.strokeStyle = "#fff", c.lineWidth = 2, c.beginPath(), path(globe), c.stroke();
               };
