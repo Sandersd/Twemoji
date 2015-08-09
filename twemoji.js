@@ -78,25 +78,38 @@ Meteor.methods({
 });
 
 if (Meteor.isClient) {
+	Template.vis.helpers({
+		tweets: function() {
+			//Tweets.find({})
+			return Tweets.find({}, {sort: {created: -1}});
+		}
+	});
+
+	
   Template.vis.rendered = function () {
-    var width = 960,
-    height = 500;
+    var margin = {top: 10, left: 10, bottom: 10, right: 10}
+  				, width = parseInt(d3.select('#col1').style('width'))
+  				, width = width - margin.left - margin.right
+  				, mapRatio = 1
+  				, height = width * mapRatio;
 
     var projection = d3.geo.orthographic()
         .scale(248)
-        .clipAngle(90);
+        .clipAngle(90)
+        .translate([width / 2, height / 2]);
 
-    var canvas = d3.select("#canvas").append("canvas")
+    var canvas = d3.select("#map").append("canvas")
         .attr("width", width)
         .attr("height", height);
 
     var c = canvas.node().getContext("2d");
-
     var path = d3.geo.path()
         .projection(projection)
         .context(c);
 
     var title = d3.select("h1");
+    title.style("bottom", 10);
+    title.style("left", width/2);
 
     queue()
         .defer(d3.json, "world-110m.json")
@@ -142,6 +155,8 @@ if (Meteor.isClient) {
           .transition()
             .each("end", transition);
       })();
+
+	
     }
   };
 }

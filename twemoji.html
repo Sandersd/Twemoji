@@ -3,11 +3,27 @@
 </head>
 
 <body>
-	<div id="canvas" class="center">
-  		{{> vis}}
-  	</div>
+  	{{> vis}}
 </body>
 
 <template name="vis">  
-  	<h1></h1>
+	<div class="container">
+		<div class="row">
+			<div id="col1" class="eight columns">
+  				<div id="map"></div>
+  				<h1></h1>
+			</div>
+			<div id="col2" class="four columns">
+				{{#each tweets}}
+					{{> tweet}}
+				{{/each}}
+			</div>
+  		</div>
+	</div>
+</template>
+
+<template name="tweet">
+
+{{id}}
+<br>
 </template>
