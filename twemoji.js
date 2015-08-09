@@ -4,86 +4,85 @@ Tweets = new Mongo.Collection("tweets");
 
 if (Meteor.isServer) {
 
-  Meteor.startup(function() {
+  Meteor.methods({
 
-    var Twit = Meteor.npmRequire('twit');
+    grabTweets: function(searchWord){
 
-    var T = new Twit({
-      consumer_key: "zeaZA6so3lQJWBuvwYenj8GeF",
-      consumer_secret: "kN75GOBU4xSYIq3cVEZ2ufa4a6qjoCEXdIUMx98cIflI4K1no8",
-      access_token: "354446069-j4lVa3LvsLUfsdtRCJjiDOPazXBCC9BsxVUGXleb",
-      access_token_secret: "sgTsXbbDsKY9TnMCPpCitZDgKkSjGIOVsmEgb0t66u0qL"
-    });
+      var Twit = Meteor.npmRequire('twit');
 
+      var T = new Twit({
+        consumer_key: "zeaZA6so3lQJWBuvwYenj8GeF",
+        consumer_secret: "kN75GOBU4xSYIq3cVEZ2ufa4a6qjoCEXdIUMx98cIflI4K1no8",
+        access_token: "354446069-j4lVa3LvsLUfsdtRCJjiDOPazXBCC9BsxVUGXleb",
+        access_token_secret: "sgTsXbbDsKY9TnMCPpCitZDgKkSjGIOVsmEgb0t66u0qL"
+      });
 
-    //console.log(Microsoft.translate("Hello world", "nl"));
+      T.get('search/tweets', { q: searchWord, count: 100 }, Meteor.bindEnvironment (function(err, tweet, response) {
+        if(err) console.log(err);
 
-  var stream = T.stream('statuses/filter', { track: 'Trump' });
-
-	stream.on('tweet', Meteor.bindEnvironment (function (tweet) {
-
-	  if(tweet['lang'] === 'en') {
-	    if(tweet['place'] !== null) {
-
-	      console.log(tweet['id'] + ', ' + tweet['place']['bounding_box']['coordinates'][0][0]+ ', ' + tweet['text']);
+        for(var i=0; i<100; i++) {
+          //console.log(tweet);
+        if(tweet['statuses'][i]['place'] !== null) {
+          if(tweet['statuses'][i]['lang'] === 'en') {
 
 
-	      var id = tweet['id'];
-	      var coords = tweet['place']['bounding_box']['coordinates'][0][0];
-	      var enText = tweet['text'];
-	      var sentiVal = sentiment(enText);
-	      Tweets.insert({
-	        id: id,
-	        coordinates: coords,
-	        en_text: enText,
-	        senti: sentiVal
-	      });
-	    }
-	  } else {
-	    if(tweet['place'] !== null) {
-
-	      console.log(tweet['id'] + ', ' + tweet['place']['bounding_box']['coordinates'][0][0] + ', ' + tweet['text']);
+          console.log(tweet['statuses'][i]['id'] + ', ' + tweet['statuses'][i]['place']['bounding_box']['coordinates'][0][0]+ ', ' + tweet['statuses'][i]['text']);
 
 
-	      var id = tweet['id'];
-	      var coords = tweet['place']['bounding_box']['coordinates'][0][0];
-	      var enText = Microsoft.translate(tweet['text'], "en");
-	      var sentiVal = sentiment(enText);
-	      Tweets.insert({
-	        id: id,
-	        coordinates: coords,
-	        en_text: enText,
-	        senti: sentiVal
-	      });
-	    }
-	  }
-	}));
-  });
-}
+          var id = tweet['statuses'][i]['id'];
+          var coords = tweet['statuses'][i]['place']['bounding_box']['coordinates'][0][0];
+          var enText = tweet['statuses'][i]['text'];
+          var sentiVal = sentiment(enText);
+          Tweets.insert({
+            id: id,
+            coordinates: coords,
+            en_text: enText,
+            senti: sentiVal
+          });
 
-Meteor.methods({
-  classifySentiment: function(sentence){
-    var wordArray = sentence.split(" ");
-    var x = wordArray.length;
-    var value = 0;
-    for (var i = 0; i<x; i++){
-      var word = wordArray[i];
-      if (Wordlist[word] != undefined) {
-        value += Wordlist[word];
+      } else {
+
+          console.log(tweet['statuses'][i]['id'] + ', ' + tweet['statuses'][i]['place']['bounding_box']['coordinates'][0][0] + ', ' + tweet['statuses'][i]['text']);
+
+
+          var id = tweet['statuses'][i]['id'];
+          var coords = tweet['statuses'][i]['place']['bounding_box']['coordinates'][0][0];
+          var enText = Microsoft.translate(tweet['statuses'][i]['text'], "en");
+          var sentiVal = sentiment(enText);
+          Tweets.insert({
+            id: id,
+            coordinates: coords,
+            en_text: enText,
+            senti: sentiVal
+          });
+        }
       }
     }
-    value /= x;
-    return value;
-  }
+  } )
+
+);
+}
 });
+}
+
+
 
 if (Meteor.isClient) {
+
 	Template.vis.helpers({
 		tweets: function() {
 			//Tweets.find({})
 			return Tweets.find({}, {sort: {created: -1}});
 		}
 	});
+
+  Template.vis.events({
+    'click button': function() {
+      search = document.getElementById("search").value;
+      console.log(search);
+      Meteor.call('grabTweets', search);
+    }
+  });
 
 
   Template.vis.rendered = function () {
